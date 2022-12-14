@@ -8,6 +8,7 @@ from huobi.connection.subscribe_client import SubscribeClient
 class SubTradeDetailService:
     def __init__(self, params):
         self.params = params
+        self._subscribe_client = None
 
     def subscribe(self, callback, error_handler, **kwargs):
         symbol_list = self.params["symbol_list"]
@@ -23,10 +24,11 @@ class SubTradeDetailService:
             trade_detail_event.ch = dict_data.get("ch", "")
             return trade_detail_event
 
-        SubscribeClient(**kwargs).execute_subscribe_v1(subscription,
-                                            parse,
-                                            callback,
-                                            error_handler)
-
+        self._subscribe_client = SubscribeClient(**kwargs)
+        self._subscribe_client.execute_subscribe_v1(
+            subscription,
+            parse,
+            callback,
+            error_handler)
 
 

@@ -16,6 +16,7 @@ class MarketClient(object):
             init_log: to init logger
         """
         self.__kwargs = kwargs
+        self._sub_trade_detail_service = None
 
     def get_candlestick(self, symbol, period, size=200):
         """
@@ -354,7 +355,8 @@ class MarketClient(object):
         }
 
         from huobi.service.market.sub_trade_detail import SubTradeDetailService
-        SubTradeDetailService(params).subscribe(callback, error_handler, **self.__kwargs)
+        self._sub_trade_detail_service = SubTradeDetailService(params)
+        self._sub_trade_detail_service.subscribe(callback, error_handler, **self.__kwargs)
 
     def req_trade_detail(self, symbols: 'str', callback, error_handler=None):
         """
@@ -494,3 +496,9 @@ class MarketClient(object):
         }
         from huobi.service.market.req_mbp import ReqMbpService
         ReqMbpService(params).subscribe(callback, error_handler, **self.__kwargs)
+
+    def unsubscribe_all(self) -> None:
+        if self._sub_trade_detail_service and self._sub_trade_detail_service._subscribe_client:
+            self._sub_trade_detail_service._subscribe_client.subscribe_watch_dog.scheduler.shutdown(True)
+            self._sub_trade_detail_service._subscribe_client.unsubscribe_all()
+
