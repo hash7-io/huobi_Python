@@ -17,6 +17,7 @@ class MarketClient(object):
         """
         self.__kwargs = kwargs
         self._sub_trade_detail_service = None
+        self._sub_market_detail_service = None
 
     def get_candlestick(self, symbol, period, size=200):
         """
@@ -270,7 +271,8 @@ class MarketClient(object):
         }
 
         from huobi.service.market.sub_market_detail import SubMarketDetailService
-        SubMarketDetailService(params).subscribe(callback, error_handler, **self.__kwargs)
+        self._sub_market_detail_service = SubMarketDetailService(params)
+        self._sub_market_detail_service.subscribe(callback, error_handler, **self.__kwargs)
 
     def req_market_detail(self, symbols: 'str', callback, error_handler=None):
         """
@@ -501,4 +503,8 @@ class MarketClient(object):
         if self._sub_trade_detail_service and self._sub_trade_detail_service._subscribe_client:
             self._sub_trade_detail_service._subscribe_client.subscribe_watch_dog.scheduler.shutdown(True)
             self._sub_trade_detail_service._subscribe_client.unsubscribe_all()
+        
+        if self._sub_market_detail_service and self._sub_market_detail_service._subscribe_client:
+            self._sub_market_detail_service._subscribe_client.subscribe_watch_dog.scheduler.shutdown(True)
+            self._sub_market_detail_service._subscribe_client.unsubscribe_all()
 

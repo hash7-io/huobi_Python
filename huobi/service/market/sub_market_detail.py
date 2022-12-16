@@ -22,10 +22,12 @@ class SubMarketDetailService:
         def parse(dict_data):
             return default_parse(dict_data, MarketDetailEvent, MarketDetail)
 
-        SubscribeClient(**kwargs).execute_subscribe_v1(subscription,
-                                            parse,
-                                            callback,
-                                            error_handler)
+        self._subscribe_client = SubscribeClient(**kwargs)
+        self._subscribe_client.execute_subscribe_v1(
+            subscription,
+            parse,
+            callback,
+            error_handler)
 
 
 
