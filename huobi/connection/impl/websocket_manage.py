@@ -258,14 +258,14 @@ class WebsocketManage:
     def __process_ping_on_trading_line(self, ping_ts):
         #print("### __process_ping_on_trading_line ###")
         #self.send("{\"op\":\"pong\",\"ts\":" + str(get_current_timestamp()) + "}")
-        PrintBasic.print_basic(ping_ts, "response time")
+        #PrintBasic.print_basic(ping_ts, "response time")
         self.send("{\"op\":\"pong\",\"ts\":" + str(ping_ts) + "}")
         return
 
     def __process_ping_on_market_line(self, ping_ts):
         #print("### __process_ping_on_market_line ###")
         #self.send("{\"pong\":" + str(get_current_timestamp()) + "}")
-        PrintBasic.print_basic(ping_ts, "response time")
+        #PrintBasic.print_basic(ping_ts, "response time")
         self.send("{\"pong\":" + str(ping_ts) + "}")
         return
 
