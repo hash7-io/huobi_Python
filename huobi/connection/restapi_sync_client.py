@@ -109,16 +109,16 @@ class RestApiSyncClient(object):
 
         return request
 
-    def request_process(self, method, url, params, parse):
+    def request_process(self, method, url, params, parse, is_decimal=False):
         if self.__performance_test is not None and self.__performance_test is True:
             return self.request_process_performance(method, url, params, parse)
         else:
-            return self.request_process_product(method, url, params, parse)
+            return self.request_process_product(method, url, params, parse, is_decimal=is_decimal)
 
-    def request_process_product(self, method, url, params, parse):
+    def request_process_product(self, method, url, params, parse, is_decimal=False):
         request = self.create_request(method, url, params, parse)
         if request:
-            return call_sync(request)
+            return call_sync(request, is_decimal=is_decimal)
 
         return None
 

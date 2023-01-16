@@ -47,13 +47,17 @@ def check_response(dict_data):
         raise HuobiApiException(HuobiApiException.RUNTIME_ERROR, "[Invoking] Status cannot be found in response.")
 
 
-def call_sync(request, is_checked=False):
+def call_sync(request, is_checked=False, is_decimal=False):
     if request.method == "GET":
         # print("call_sync url : " , request.host + request.url)
         response = session.get(request.host + request.url, headers=request.header)
         if is_checked is True:
             return response.text
-        dict_data = json.loads(response.text)
+        if is_decimal:
+            from decimal import Decimal
+            dict_data = json.loads(response.text, parse_float=Decimal)
+        else:
+            dict_data = json.loads(response.text)
         # print("call_sync  === recv data : ", dict_data)
         check_response(dict_data)
         return request.json_parser(dict_data)

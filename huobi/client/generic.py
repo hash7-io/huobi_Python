@@ -56,6 +56,19 @@ class GenericClient(object):
         from huobi.service.generic.get_exchange_symbols import GetExchangeSymbolsService
         return GetExchangeSymbolsService(params).request(**self.__kwargs)
 
+    def get_exchange_symbols_v2(self) -> list():
+        """
+        Get all the trading assets and currencies supported in huobi.
+        The information of trading instrument etc.
+
+        :return: The information of trading instrument.
+        """
+
+        params = {}
+
+        from huobi.service.generic.get_exchange_symbols import GetCommonMarketSymbolsService
+        return GetCommonMarketSymbolsService(params).request(**self.__kwargs)
+
     def get_exchange_info(self) -> ExchangeInfo:
         """
         Get all the trading assets and currencies supported in huobi.
