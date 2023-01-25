@@ -138,7 +138,7 @@ class TradeClient(object):
         from huobi.service.trade.req_order_detail import ReqOrderDetailService
         ReqOrderDetailService(params).subscribe(callback, error_handler, **self.__kwargs)
 
-    def get_order(self, order_id: 'int') -> Order:
+    def get_order(self, order_id: 'int', is_decimal: bool = False) -> Order:
         """
         Get the details of an order.
 
@@ -152,6 +152,7 @@ class TradeClient(object):
         }
 
         from huobi.service.trade.get_order_by_id import GetOrderByIdService
+        self.__kwargs['is_decimal'] = is_decimal
         return GetOrderByIdService(params).request(**self.__kwargs)
 
     def get_order_by_client_order_id(self, client_order_id):
@@ -325,7 +326,8 @@ class TradeClient(object):
         return params
 
     def create_order(self, symbol: 'str', account_id: 'int', order_type: 'OrderType', amount: 'float',
-                     price: 'float', source:'str', client_order_id=None, stop_price=None, operator=None) -> int:
+                     price: 'float', source:'str', client_order_id=None, stop_price=None, operator=None,
+                     is_decimal: bool = False) -> int:
         """
         Make an order in huobi.
 
@@ -347,6 +349,7 @@ class TradeClient(object):
         params = self.create_order_param_check(symbol, account_id, order_type, amount,
                      price, source, client_order_id, stop_price, operator)
         from huobi.service.trade.post_create_order import PostCreateOrderService
+        self.__kwargs['is_decimal'] = is_decimal
         return PostCreateOrderService(params).request(**self.__kwargs)
 
     def create_spot_order(self, symbol: 'str', account_id: 'int', order_type: 'OrderType', amount: 'float',

@@ -14,7 +14,9 @@ class PostCreateOrderService:
         def parse(dict_data):
             return default_parse_data_as_long(dict_data, None)
 
-        return RestApiSyncClient(**kwargs).request_process(HttpMethod.POST_SIGN, channel, self.params, parse)
+        is_decimal = kwargs.get('is_decimal', False)
+        return RestApiSyncClient(**kwargs).request_process(HttpMethod.POST_SIGN, channel, self.params, parse,
+                                                           is_decimal=is_decimal)
 
 
 

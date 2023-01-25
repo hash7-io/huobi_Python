@@ -64,7 +64,11 @@ def call_sync(request, is_checked=False, is_decimal=False):
 
     elif request.method == "POST":
         response = session.post(request.host + request.url, data=json.dumps(request.post_body), headers=request.header)
-        dict_data = json.loads(response.text)
+        if is_decimal:
+            from decimal import Decimal
+            dict_data = json.loads(response.text, parse_float=Decimal)
+        else:
+            dict_data = json.loads(response.text)
         # print("call_sync  === recv data : ", dict_data)
         check_response(dict_data)
         return request.json_parser(dict_data)

@@ -19,7 +19,9 @@ class GetOrderByIdService:
             data_dict = dict_data.get("data")
             return Order.json_parse(data_dict)
 
-        return RestApiSyncClient(**kwargs).request_process(HttpMethod.GET_SIGN, get_channel(), self.params, parse)
+        is_decimal = kwargs.get('is_decimal', False)
+        return RestApiSyncClient(**kwargs).request_process(HttpMethod.GET_SIGN, get_channel(), self.params, parse,
+                                                           is_decimal=is_decimal)
 
 
 
