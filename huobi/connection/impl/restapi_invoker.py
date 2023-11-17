@@ -47,10 +47,13 @@ def check_response(dict_data):
         raise HuobiApiException(HuobiApiException.RUNTIME_ERROR, "[Invoking] Status cannot be found in response.")
 
 
-def call_sync(request, is_checked=False, is_decimal=False):
+def call_sync(request, is_checked=False, is_decimal=False, proxies=None):
     if request.method == "GET":
         # print("call_sync url : " , request.host + request.url)
-        response = session.get(request.host + request.url, headers=request.header)
+        if proxies:
+            response = session.get(request.host + request.url, headers=request.header, proxies=proxies)
+        else:
+            response = session.get(request.host + request.url, headers=request.header)
         if is_checked is True:
             return response.text
         if is_decimal:
@@ -63,7 +66,19 @@ def call_sync(request, is_checked=False, is_decimal=False):
         return request.json_parser(dict_data)
 
     elif request.method == "POST":
-        response = session.post(request.host + request.url, data=json.dumps(request.post_body), headers=request.header)
+        if proxies:
+            response = session.post(
+                request.host + request.url,
+                data=json.dumps(request.post_body),
+                headers=request.header,
+                proxies=proxies
+            )
+        else:
+            response = session.post(
+                request.host + request.url,
+                data=json.dumps(request.post_body),
+                headers=request.header
+            )
         if is_decimal:
             from decimal import Decimal
             dict_data = json.loads(response.text, parse_float=Decimal)
@@ -72,6 +87,7 @@ def call_sync(request, is_checked=False, is_decimal=False):
         # print("call_sync  === recv data : ", dict_data)
         check_response(dict_data)
         return request.json_parser(dict_data)
+
 
 def call_sync_perforence_test(request, is_checked=False):
     if request.method == "GET":

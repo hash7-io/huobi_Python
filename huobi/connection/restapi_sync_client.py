@@ -8,7 +8,6 @@ from huobi.utils import *
 from huobi.exception.huobi_api_exception import HuobiApiException
 
 
-
 class RestApiSyncClient(object):
 
     def __init__(self, **kwargs):
@@ -26,6 +25,7 @@ class RestApiSyncClient(object):
         self.__server_url = kwargs.get("url", get_default_server_url(None))
         self.__init_log = kwargs.get("init_log", None)
         self.__performance_test = kwargs.get("performance_test", None)
+        self.proxies = kwargs.get("proxies", None)
         if self.__init_log and self.__init_log:
             logger = logging.getLogger("huobi-client")
             logger.setLevel(level=logging.INFO)
@@ -118,7 +118,7 @@ class RestApiSyncClient(object):
     def request_process_product(self, method, url, params, parse, is_decimal=False):
         request = self.create_request(method, url, params, parse)
         if request:
-            return call_sync(request, is_decimal=is_decimal)
+            return call_sync(request, is_decimal=is_decimal, proxies=self.proxies)
 
         return None
 

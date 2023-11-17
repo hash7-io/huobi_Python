@@ -15,6 +15,7 @@ class TradeClient(object):
             init_log: to init logger
         """
         self.__kwargs = kwargs
+        self.proxies = kwargs.get("proxies", None)
 
     def get_feerate(self, symbols: 'str') -> list:
         """
@@ -350,6 +351,7 @@ class TradeClient(object):
                      price, source, client_order_id, stop_price, operator)
         from huobi.service.trade.post_create_order import PostCreateOrderService
         self.__kwargs['is_decimal'] = is_decimal
+        self.__kwargs['proxies'] = self.proxies
         return PostCreateOrderService(params).request(**self.__kwargs)
 
     def create_spot_order(self, symbol: 'str', account_id: 'int', order_type: 'OrderType', amount: 'float',
